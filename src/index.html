@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+</head>
+
+<body>
+<div id="app" class="container">
+    <!-- user list -->
+    <div class="column">
+        <!-- the user list is passed as prop to users component -->
+        <div class = "user-list rounded mb-2">
+        <users v-bind:users="users"></users>
+        </div>
+    </div>
+    <!-- Chat Box goes here -->
+    <div class="columns">
+        <div class="column is-two-thirds">
+
+            <!-- inputs user name -->
+            <!-- we pass isLogged as a property to input-name component, this prop is used to show or not the component -->
+            <!-- we also listen to set-name event, when user inputs the username, the component emits an event -->
+            <input-name v-bind:is-logged="isLogged" v-on:set-name="setName"></input-name>
+
+            <!-- message list -->
+            <!-- we show the chatbox if user has username (isLogged) -->
+            <div class="box" v-show="isLogged">
+                <div id="#messages" class="messages">
+                    <ul>
+                        <!-- iterating over messages -->
+                        <li v-for="message in messages">
+                            <!-- bind each message data to the message component -->
+                            <message v-bind:message-data="message"></message>
+                        </li>
+                    </ul>
+                </div>
+                <!-- inputs new message -->
+                <!-- when a message is sent, input-message component emits an event (send-message) which is captured here -->
+                <input-message v-on:send-message="sendMessage"></input-message>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="npm/vue/dist/vue.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

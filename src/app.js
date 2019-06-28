@@ -83,12 +83,82 @@ Vue.component('users', {
                     </div>`
 });
 
+// Rooms component
+Vue.component('rooms', {
+    props: ['rooms'],
+    template: ` <div class="rooms">
+                        <h4 class="title is-4">Available ({{rooms.length}}) rooms</h4>
+                        <ul>
+                            <li v-for="room in rooms">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            {{room}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>`
+});
+
+// Input room name Component
+Vue.component('input-room', {
+    data: function () {
+        return {
+            roomName: ''
+        };
+    },
+    template: `<div id="roomInput">
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <input v-model="roomName" v-on:keydown.enter="createRoomName" class="input is-primary" placeholder="Room name">
+                            </div>
+                            <div class="control">
+                                <button v-on:click="createRoomName" :disabled="!roomName" class="button is-primary">Create</button>
+                            </div>
+                        </div>
+                    </div>`,
+    methods: {
+        createRoomName: function () {
+            if (this.roomName.length > 0) {
+                this.$emit('create-room', this.roomName);
+            }
+        }
+    }
+});
+
+//Input room name Component
+Vue.component('change-button', {
+    data: function () {
+        return {
+            roomToChange: ''
+        };
+    },
+    template: `<div id="roomInput">
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <input v-model="roomToChange" v-on:keydown.enter="changeRoomName" class="input is-primary" placeholder="Direct Room">
+                            </div>
+                            <div class="control">
+                                <button v-on:click="changeRoomName" class="button is-primary">Enter Room</button>
+                            </div>
+                        </div>
+                    </div>`,
+    methods: {
+        changeRoomName: function () {
+            this.$emit('change-room', this.roomToChange);
+        }
+    }
+});
+
 // Vue instance
 var app = new Vue({
     el: '#app',
     data: {
         messages: [],
         users: [],
+        rooms: [],
         userName: '',
         isLogged: false
     },
@@ -102,6 +172,14 @@ var app = new Vue({
             this.userName = userName;
             this.isLogged = true;
             socket.emit('add-user', this.userName);
+        },
+        createRoom: function (roomName) {
+            this.roomName = roomName;
+            socket.emit('add-room', this.roomName);
+        },
+        changeRoom: function (roomToChange) {
+            this.roomToChange = roomToChange;
+            socket.emit('change-room', this.roomToChange);
         },
         scrollToEnd: function () {
             var container = this.$el.querySelector('.messages');
@@ -135,4 +213,8 @@ socket.on('init-chat', function (messages) {
 // Init user list. Updates user list when the client init
 socket.on('update-users', function (users) {
     app.users = users;
+});
+
+socket.on('update-rooms', function (rooms) {
+    app.rooms = rooms;
 });

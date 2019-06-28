@@ -99,6 +99,13 @@ li {
     padding: 10px;
 }
 
+.room-list {
+    position: absolute;
+    left: 10px;
+    background: silver;
+    padding: 10px;
+}
+
 .messages {
     position: relative;
 }
@@ -106,6 +113,11 @@ li {
 .container {
     background: silver;
     padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.field {
+    display: flex;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
